@@ -5,6 +5,7 @@ const User = require('../models/User');
 // 🔹 Insert new user (POST)
 router.post('/', async (req, res) => {
   try {
+    console.log('Incoming user:', req.body); // 👈 Debug
     const newUser = new User(req.body);
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
