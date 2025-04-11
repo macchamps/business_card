@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title><%= user.name %>'s Card</title></head>
+<body style="font-family: Arial; background-color: #000; color: #fff; padding: 20px;">
+  <h1><%= user.name %></h1>
+  <h2><%= user.title %></h2>
+  <img src="<%= user.profileImage %>" alt="Profile" style="width:150px; border-radius: 75px;">
+  <p><strong>Phone:</strong> <a href="tel:<%= user.phone %>" style="color: #fff;"><%= user.phone %></a></p>
+  <p><strong>Email:</strong> <a href="mailto:<%= user.email %>" style="color: #fff;"><%= user.email %></a></p>
+  <p><strong>Website:</strong> <a href="<%= user.website %>" target="_blank" style="color: #fff;"><%= user.website %></a></p>
+  <p><strong>Location:</strong> <%= user.location %></p>
+  <p><strong>About:</strong> <%= user.about %></p>
+</body>
+</html>
