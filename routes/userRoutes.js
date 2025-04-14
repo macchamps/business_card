@@ -1,39 +1,12 @@
 const express = require('express');
-const multer = require('multer');
 const path = require('path');
 const router = express.Router();
 const User = require('../models/User');
-const uploadToImgbb = require('../utils/imgbb');
-// ✅ Configure Multer
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'images/'); // You must create this folder
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueName = Date.now() + '-' + file.originalname;
-//     cb(null, uniqueName);
-//   }
-// });
 
-// 📦 Init multer
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
-const cpUpload = upload.fields([
-  { name: 'profileImage', maxCount: 1 },
-  { name: 'businessImage', maxCount: 1 }
-]);
 
 // 🔹 Insert new user (POST)
-router.post('/', cpUpload, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const files = req.files;
-    const profileBuffer = files?.profileImage?.[0]?.buffer;
-    const businessBuffer = files?.businessImage?.[0]?.buffer;
-
-    // Upload to imgbb
-    const profileImageUrl = profileBuffer ? await uploadToImgbb(profileBuffer) : undefined;
-    const businessImageUrl = businessBuffer ? await uploadToImgbb(businessBuffer) : undefined;
 
     const userData = {
       name: req.body.name,
@@ -43,8 +16,8 @@ router.post('/', cpUpload, async (req, res) => {
       website: req.body.website,
       location: req.body.location,
       about: req.body.about,
-      profileImage: profileImageUrl,
-      businessImage: businessImageUrl
+      profileImage: req.body.profileImageUrl,
+      businessImage: req.body.businessImageUrl
     };
 
     const newUser = new User(userData);
