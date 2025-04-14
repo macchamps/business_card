@@ -31,7 +31,7 @@ router.post('/', cpUpload, async (req, res) => {
     const profileImage = files?.profileImage?.[0]?.filename;
     const businessImage = files?.businessImage?.[0]?.filename;
     
-
+    console.log("Current directory:", process.cwd());
     const userData = {
       name: req.body.name,
       title: req.body.title,
