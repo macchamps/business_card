@@ -5,10 +5,11 @@ const UserSchema = new mongoose.Schema({
   title: String,
   phone: String,
   email: String,
-  profileImage: String,
   website: String,
   location: String,
-  about: String
+  about: String,
+  profileImage: String,
+  businessImage: String
 });
 
 module.exports = mongoose.model('User', UserSchema);
