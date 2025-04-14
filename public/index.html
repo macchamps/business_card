@@ -521,7 +521,11 @@
   <!-- == //Body Section == --> 
   <script>
     // Fetch data from backend API
-    fetch('/api/user/67f7aed79978b90aeec04978') // sample ID
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('id');
+ 
+
+    fetch('/api/user/' + userId) // sample ID
       .then(res => res.json())
       .then(user => {          
         document.getElementById('name').innerText = user.name;
