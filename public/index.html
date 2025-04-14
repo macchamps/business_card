@@ -232,7 +232,7 @@
                     <td height="25" style="height: 25px;"></td>
                   </tr>
                     <tr>
-                    <td align="center" valign="top" style="font-family: 'Poppins', 'Arial', sans-serif; font-size: 30px; color: #FFF; line-height: 35px; font-weight: 600;">Loading...</td>
+                    <td  id="businessname" align="center" valign="top" style="font-family: 'Poppins', 'Arial', sans-serif; font-size: 30px; color: #FFF; line-height: 35px; font-weight: 600;">Loading...</td>
                     </tr>
                      <tr>
                     <td height="25" style="height: 25px;">&nbsp;</td>
@@ -533,6 +533,7 @@
         document.getElementById('emailRow').href = "Mailto:"+user.email;
         document.getElementById('title').innerText = user.title;
         document.getElementById('phone').innerText = user.phone;
+        document.getElementById('businessname').innerText = user.businessname;
         document.getElementById('whatsapp').href = "https://api.whatsapp.com/send?phone="+user.phone;
         document.getElementById('website').href = user.website;
         document.getElementById('location').innerText = user.location;
