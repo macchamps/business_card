@@ -8,6 +8,7 @@ router.post('/', async (req, res) => {
     console.log('Incoming user:', req.body); // 👈 Debug
     const newUser = new User(req.body);
     const savedUser = await newUser.save();
+    console.log('✅ User saved:', savedUser);
     res.status(201).json(savedUser);
   } catch (err) {
     res.status(400).json({ error: 'Invalid data', details: err.message });
