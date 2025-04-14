@@ -5,20 +5,20 @@ const router = express.Router();
 const User = require('../models/User');
 const uploadToImgbb = require('../utils/imgbb');
 // ✅ Configure Multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'images/'); // You must create this folder
-  },
-  filename: function (req, file, cb) {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'images/'); // You must create this folder
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueName = Date.now() + '-' + file.originalname;
+//     cb(null, uniqueName);
+//   }
+// });
 
 // 📦 Init multer
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// 🔄 Accept multiple named image fields
 const cpUpload = upload.fields([
   { name: 'profileImage', maxCount: 1 },
   { name: 'businessImage', maxCount: 1 }
