@@ -21,8 +21,7 @@ const upload = multer({ storage });
 // 🔄 Accept multiple named image fields
 const cpUpload = upload.fields([
   { name: 'profileImage', maxCount: 1 },
-  { name: 'businessImage', maxCount: 1 },
-  { name: 'qrCodeImage', maxCount: 1 },
+  { name: 'businessImage', maxCount: 1 }
 ]);
 
 // 🔹 Insert new user (POST)
@@ -31,7 +30,7 @@ router.post('/', cpUpload, async (req, res) => {
     const files = req.files;
     const profileImage = files?.profileImage?.[0]?.filename;
     const businessImage = files?.businessImage?.[0]?.filename;
-    const qrCodeImage = files?.qrCodeImage?.[0]?.filename;
+    
 
     const userData = {
       name: req.body.name,
@@ -42,8 +41,7 @@ router.post('/', cpUpload, async (req, res) => {
       location: req.body.location,
       about: req.body.about,
       profileImage: profileImage ? '/images/' + profileImage : undefined,
-      businessImage: businessImage ? '/images/' + businessImage : undefined,
-      qrCodeImage: qrCodeImage ? '/images/' + qrCodeImage : undefined
+      businessImage: businessImage ? '/images/' + businessImage : undefined
     };
 
     const newUser = new User(userData);
