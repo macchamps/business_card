@@ -535,7 +535,9 @@
         document.getElementById('phone').innerText = user.phone;
         document.getElementById('businessname').innerText = user.businessname;
         document.getElementById('whatsapp').href = "https://api.whatsapp.com/send?phone="+user.phone;
-        document.getElementById('website').href = user.website;
+        const websiteLink = document.getElementById('website');
+              websiteLink.href = user.website;
+              websiteLink.innerText = user.website;
         document.getElementById('location').innerText = user.location;
         document.getElementById('about').innerText = user.about;
         document.getElementById('profileImage').src = user.profileImage;
