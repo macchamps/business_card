@@ -19,12 +19,13 @@ router.post('/', async (req, res) => {
       profileImage: req.body.profileImageUrl,
       businessImage: req.body.businessImageUrl
     };
+    console.log('✅ User saved:', userData);
 
     const newUser = new User(userData);
-    const savedUser = await newUser.save();
+    // const savedUser = await newUser.save();
 
     console.log('✅ User saved:', savedUser);
-    res.status(201).json(savedUser);
+    res.status(201).json(newUser);
   } catch (err) {
     console.error('❌ Error saving user:', err);
     res.status(400).json({ error: 'Invalid data', details: err.message });
