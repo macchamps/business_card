@@ -18,7 +18,6 @@ mongoose.connect('mongodb+srv://monang:monang@bussinesscard.tzld3ux.mongodb.net/
 // Setup views and static files
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // API route to get a user by ID
