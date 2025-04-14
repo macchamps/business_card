@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const router = express.Router();
 const User = require('../models/User');
-
+const uploadToImgbb = require('../utils/imgbb');
 // ✅ Configure Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -28,10 +28,13 @@ const cpUpload = upload.fields([
 router.post('/', cpUpload, async (req, res) => {
   try {
     const files = req.files;
-    const profileImage = files?.profileImage?.[0]?.filename;
-    const businessImage = files?.businessImage?.[0]?.filename;
-    
-    console.log("Current directory:", process.cwd());
+    const profileBuffer = files?.profileImage?.[0]?.buffer;
+    const businessBuffer = files?.businessImage?.[0]?.buffer;
+
+    // Upload to imgbb
+    const profileImageUrl = profileBuffer ? await uploadToImgbb(profileBuffer) : undefined;
+    const businessImageUrl = businessBuffer ? await uploadToImgbb(businessBuffer) : undefined;
+
     const userData = {
       name: req.body.name,
       title: req.body.title,
@@ -40,8 +43,8 @@ router.post('/', cpUpload, async (req, res) => {
       website: req.body.website,
       location: req.body.location,
       about: req.body.about,
-      profileImage: profileImage ? '/images/' + profileImage : undefined,
-      businessImage: businessImage ? '/images/' + businessImage : undefined
+      profileImage: profileImageUrl,
+      businessImage: businessImageUrl
     };
 
     const newUser = new User(userData);
