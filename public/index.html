@@ -518,20 +518,21 @@
   </td>
   </tr>
   </tbody></table>
+  <div id="loader" style="display: none; text-align: center; margin-top: 10px;">
+    <span>Preparing contact...</span>
+  </div>
   <!-- == //Body Section == --> 
-  <script>
- let user;
+<script>
+let user;
 
-// Fetch data from backend API
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('id');
 
 fetch('/api/user/' + userId)
   .then(res => res.json())
   .then(data => {
-    user = data; // assign to outer-scope variable
-    console.log("User Data Load", user);
-    // Populate the page with user info
+    user = data;
+
     document.getElementById('name').innerText = user.name;
     document.getElementById('email').innerText = user.email;
     document.getElementById('emailRow').href = "mailto:" + user.email;
@@ -548,28 +549,38 @@ fetch('/api/user/' + userId)
     document.getElementById('businessImage').src = user.businessImage;
   });
 
-// vCard download logic
-document.getElementById("vcardDownload").addEventListener("click", function (e) {
+function toBase64(url) {
+  return fetch(url)
+    .then(res => res.blob())
+    .then(blob => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    }));
+}
+
+document.getElementById("vcardDownload").addEventListener("click", async function (e) {
   e.preventDefault();
 
   const loader = document.getElementById('loader');
-  loader.style.display = 'block'; // Show loader
-  
+  loader.style.display = 'block';
 
-  // Make sure user data is loaded
   if (!user) {
     alert("User data is still loading. Please try again shortly.");
+    loader.style.display = 'none';
     return;
   }
+
   try {
     let photoBase64 = '';
     try {
       photoBase64 = await toBase64(user.profileImage);
     } catch (err) {
-      console.warn("Could not convert image to base64", err);
+      console.warn("Image base64 conversion failed", err);
     }
 
-  const vCard = `
+    const vCard = `
 BEGIN:VCARD
 VERSION:3.0
 FN:${user.name}
@@ -583,24 +594,22 @@ ADR;TYPE=WORK:;;${user.location};;;
 NOTE:${user.about}
 ${photoBase64 ? `PHOTO;ENCODING=b;TYPE=JPEG:${photoBase64}` : ''}
 END:VCARD
-  `.trim();
+    `.trim();
 
-  const blob = new Blob([vCard], { type: "text/vcard;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
+    const blob = new Blob([vCard], { type: "text/vcard;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${user.name.replace(/\s+/g, "_")}.vcf`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-} finally {
-    loader.style.display = 'none'; // Hide loader after download
-}
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${user.name.replace(/\s+/g, "_")}.vcf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } finally {
+    loader.style.display = 'none';
+  }
 });
   </script>
-  <div id="loader" style="display: none; text-align: center; margin-top: 10px;">
-    <span>Preparing contact...</span>
-  </div>
+ 
   </body></html>
