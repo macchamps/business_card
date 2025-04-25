@@ -520,34 +520,45 @@
   </tbody></table>
   <!-- == //Body Section == --> 
   <script>
-    // Fetch data from backend API
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('id');
- 
+ let user;
 
-    fetch('/api/user/' + userId) // sample ID
-      .then(res => res.json())
-      .then(user => {          
-        document.getElementById('name').innerText = user.name;
-        document.getElementById('email').innerText = user.email;
-        document.getElementById('emailRow').href = "Mailto:"+user.email;
-        document.getElementById('title').innerText = user.title;
-        document.getElementById('phone').innerText = user.phone;
-        document.getElementById('businessname').innerText = user.businessname;
-        document.getElementById('whatsapp').href = "https://api.whatsapp.com/send?phone="+user.phone;
-        const websiteLink = document.getElementById('website');
-              websiteLink.href = user.website;
-              websiteLink.innerText = user.website;
-        document.getElementById('location').innerText = user.location;
-        document.getElementById('about').innerText = user.about;
-        document.getElementById('profileImage').src = user.profileImage;
-        document.getElementById('businessImage').src = user.businessImage;
-      });
+// Fetch data from backend API
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('id');
 
-      document.getElementById("vcardDownload").addEventListener("click", function (e) {
-          e.preventDefault();
+fetch('/api/user/' + userId)
+  .then(res => res.json())
+  .then(data => {
+    user = data; // assign to outer-scope variable
 
-const vCard = `
+    // Populate the page with user info
+    document.getElementById('name').innerText = user.name;
+    document.getElementById('email').innerText = user.email;
+    document.getElementById('emailRow').href = "mailto:" + user.email;
+    document.getElementById('title').innerText = user.title;
+    document.getElementById('phone').innerText = user.phone;
+    document.getElementById('businessname').innerText = user.businessname;
+    document.getElementById('whatsapp').href = "https://api.whatsapp.com/send?phone=" + user.phone;
+    const websiteLink = document.getElementById('website');
+    websiteLink.href = user.website;
+    websiteLink.innerText = user.website;
+    document.getElementById('location').innerText = user.location;
+    document.getElementById('about').innerText = user.about;
+    document.getElementById('profileImage').src = user.profileImage;
+    document.getElementById('businessImage').src = user.businessImage;
+  });
+
+// vCard download logic
+document.getElementById("vcardDownload").addEventListener("click", function (e) {
+  e.preventDefault();
+
+  // Make sure user data is loaded
+  if (!user) {
+    alert("User data is still loading. Please try again shortly.");
+    return;
+  }
+
+  const vCard = `
 BEGIN:VCARD
 VERSION:3.0
 FN:${user.name}
@@ -560,7 +571,7 @@ URL:${user.website}
 ADR;TYPE=WORK:;;${user.location};;;
 NOTE:${user.about}
 END:VCARD
-`.trim();
+  `.trim();
 
   const blob = new Blob([vCard], { type: "text/vcard;charset=utf-8" });
   const url = URL.createObjectURL(blob);
@@ -572,7 +583,7 @@ END:VCARD
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-      });
+});
   </script>
   
   </body></html>
