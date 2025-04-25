@@ -496,7 +496,7 @@
                     <td align="center" valign="top">
                      <table align="center" width="150" border="0" cellspacing="0" cellpadding="0" style="max-width: 150px;">
                         <tbody><tr>
-                         <td align="center" valign="middle" height="40" bgcolor="#13477f" style="height: 40px; font-family: 'Poppins', 'Arial', sans-serif; font-size: 13px; color: #fff; line-height: 40px; background-color: #13477f; border-radius: 6px; font-weight: bold;"><a href="images/pro24007.vcf" target="_blank" style="text-decoration: none; color: #fff; height: 40px; border-radius: 6px; display: block;" download="" class="btn">+ Add To Contact</a></td>
+                         <td align="center" valign="middle" height="40" bgcolor="#13477f" style="height: 40px; font-family: 'Poppins', 'Arial', sans-serif; font-size: 13px; color: #fff; line-height: 40px; background-color: #13477f; border-radius: 6px; font-weight: bold;"><a href="#" id="vcardDownload"target="_blank" style="text-decoration: none; color: #fff; height: 40px; border-radius: 6px; display: block;" download="" class="btn">+ Add To Contact</a></td>
                          </tr>
                         </tbody></table>
                      </td>
@@ -542,6 +542,33 @@
         document.getElementById('about').innerText = user.about;
         document.getElementById('profileImage').src = user.profileImage;
         document.getElementById('businessImage').src = user.businessImage;
+      });
+
+      document.getElementById("vcardDownload").addEventListener("click", function (e) {
+          e.preventDefault();
+
+        const vCard = `
+          BEGIN:VCARD
+          VERSION:3.0
+          FN:Jane Smith
+          N:Smith;Jane;;;
+          ORG:Cold Breath Inc.
+          TITLE:Nutrition Expert
+          TEL;TYPE=CELL:+1-222-333-4444
+          EMAIL:jane.smith@example.com
+          END:VCARD
+        `.trim();
+
+        const blob = new Blob([vCard], { type: "text/vcard;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Jane_Smith.vcf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       });
   </script>
   
