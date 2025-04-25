@@ -547,28 +547,31 @@
       document.getElementById("vcardDownload").addEventListener("click", function (e) {
           e.preventDefault();
 
-        const vCard = `
-          BEGIN:VCARD
-          VERSION:3.0
-          FN:Jane Smith
-          N:Smith;Jane;;;
-          ORG:Cold Breath Inc.
-          TITLE:Nutrition Expert
-          TEL;TYPE=CELL:+1-222-333-4444
-          EMAIL:jane.smith@example.com
-          END:VCARD
-        `.trim();
+const vCard = `
+BEGIN:VCARD
+VERSION:3.0
+FN:${user.name}
+N:${user.name.split(" ").reverse().join(";")}
+ORG:${user.businessname}
+TITLE:${user.title}
+TEL;TYPE=CELL:${user.phone}
+EMAIL:${user.email}
+URL:${user.website}
+ADR;TYPE=WORK:;;${user.location};;;
+NOTE:${user.about}
+END:VCARD
+`.trim();
 
-        const blob = new Blob([vCard], { type: "text/vcard;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
+  const blob = new Blob([vCard], { type: "text/vcard;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "Jane_Smith.vcf";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${user.name.replace(/\s+/g, "_")}.vcf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
       });
   </script>
   
