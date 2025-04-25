@@ -552,11 +552,22 @@ fetch('/api/user/' + userId)
 document.getElementById("vcardDownload").addEventListener("click", function (e) {
   e.preventDefault();
 
+  const loader = document.getElementById('loader');
+  loader.style.display = 'block'; // Show loader
+
+
   // Make sure user data is loaded
   if (!user) {
     alert("User data is still loading. Please try again shortly.");
     return;
   }
+  try {
+    let photoBase64 = '';
+    try {
+      photoBase64 = await toBase64(user.profileImage);
+    } catch (err) {
+      console.warn("Could not convert image to base64", err);
+    }
 
   const vCard = `
 BEGIN:VCARD
@@ -570,6 +581,7 @@ EMAIL:${user.email}
 URL:${user.website}
 ADR;TYPE=WORK:;;${user.location};;;
 NOTE:${user.about}
+${photoBase64 ? `PHOTO;ENCODING=b;TYPE=JPEG:${photoBase64}` : ''}
 END:VCARD
   `.trim();
 
@@ -583,7 +595,12 @@ END:VCARD
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+} finally {
+    loader.style.display = 'none'; // Hide loader after download
+}
 });
   </script>
-  
+  <div id="loader" style="display: none; text-align: center; margin-top: 10px;">
+    <span>Preparing contact...</span>
+  </div>
   </body></html>
